@@ -1,9 +1,11 @@
 # audio_to_video_sample
 
+>**Note**
+>only tested on Linux and hardcoded, this is an rough
+
 ## inputs: 
-- audio file 
+- audio file .m4a
 - json file containing
-   - number of speakers
    - time stamps for when speakers talk
 
 ## output: 
