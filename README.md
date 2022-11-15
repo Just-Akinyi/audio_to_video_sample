@@ -1,7 +1,7 @@
 # audio_to_video_sample
 
 >**Note**
->only tested on Linux and hardcoded, this is an early stages of the product
+>only tested on Linux and hardcoded, this is early stages of the product
 
 ## inputs: 
 - audio file .m4a
