@@ -1,4 +1,4 @@
-from collections import deque
+# from collections import deque
 import time
 from controllers.audio_split import segment_audiofile, AudioSplit
 from controllers.transcriber import transcribe
@@ -6,6 +6,7 @@ from controllers.img_composer import make_video
 from controllers.pool_video import pool
 from uuid import uuid4
 from moviepy.editor import VideoFileClip, AudioFileClip
+from sys import argv
 # @click.group()
 # def cli():
 #     pass
@@ -16,7 +17,7 @@ from moviepy.editor import VideoFileClip, AudioFileClip
 # @click.argument('-A', '--audio_path', description='path to audio file')
 # @click.argument('-O', '--output_path', description='path to video output')
 # def animate(metadata_json: str, audio_path: str, output_path: str) -> None:
-def animate(audio_path, time_stamp_path) -> None:
+def animate(audio_path: str, time_stamp_path :str) -> None:
     """_summary_
 
     Args:
@@ -25,15 +26,15 @@ def animate(audio_path, time_stamp_path) -> None:
         output_path (str): _description_
     """
     output_path = f'data/Result/{str(uuid4())}.mp4'
-    audio_segments = segment_audiofile()
+    audio_segments = segment_audiofile(audio_path, time_stamp_path)
     for segment in audio_segments:
         segment.transcription = transcribe(segment.stream)
         segment.video = make_video(segment.speaker, segment.duration)
     
-    print('START qUEINEG')
+   
     
     sorted(audio_segments, key=lambda segment: segment.index)
-    print('FINISH qUEING')
+    
     video_paths = [segment.video for segment in audio_segments]
     compiled_video_path = pool(video_paths, f'data/compiled_final/{str(uuid4())}.mp4')
     
@@ -55,6 +56,10 @@ if __name__=='__main__':
     # cli.add_command(animate)
     # cli()
     start = time.time()
-    animate()
+    audio_path = str(argv[1])
+    map_path = str(argv[2])
+    print(audio_path, map_path)
+    animate(audio_path, map_path)
+    # animate("data/Audio/Recording.m4a", 'timestamp.json')
     print(f'RUNTIME: [{time.time() - start}]')
     

@@ -54,7 +54,6 @@ class AudioSplit:
         VIDEO: <{self.video}>"""
 
 
-_in_file = "data/Audio/Recording.m4a"
 
 def make_time(elem: str):
     # allow user to enter times on CLI
@@ -66,22 +65,30 @@ def make_time(elem: str):
         return float(t[0])
 
 
-def collect_from_file() -> list[AudioSplit]:
+def collect_from_file(time_stamp_path) -> list[AudioSplit]:
     """user can save times in a file, with start and end time on a line"""
     time_pairs = []
-    with open("timestamp.json") as in_times:
+    with open(time_stamp_path) as in_times:
         times_db = json.load(in_times)
-        number_speakers = times_db["number_of_speakers"]
+        # number_speakers = times_db["number_of_speakers"]
         diarize_parser = times_db["diarization"]
         for _id in diarize_parser:
             start, end = diarize_parser[_id][1].split('-')
-            time_pairs.append(AudioSplit(diarize_parser[_id][0], start=start, end=end, index=_id))
+            time_pairs.append(
+                AudioSplit(
+                    diarize_parser[_id][0], 
+                    start=start, end=end, 
+                    index=_id
+                )
+            )
     return time_pairs
 
 
-def segment_audiofile():
+def segment_audiofile(audio_path, time_stamp_path):
+    
+    _in_file = audio_path
     audios = []
-    for audio_split in collect_from_file():
+    for audio_split in collect_from_file(time_stamp_path):
         # open a file, from `ss`, for duration `t`
         stream = ffmpeg.input(_in_file, ss=audio_split.start_seconds, t=audio_split.duration)
         path = f'data/temp_data/{uuid4()}.wav'
