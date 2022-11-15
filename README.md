@@ -6,8 +6,8 @@
 ## inputs: 
 - audio file
    - allowed format : **.m4a**
-- json file containing
-   - time stamps for when speakers talk
+- json file
+   - containing : **time stamps for when speakers talk**
 
 ## output: 
 - video file
