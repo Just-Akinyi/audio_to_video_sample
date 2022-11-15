@@ -1,7 +1,7 @@
 # audio_to_video_sample
 
 >**Note**
->only tested on Linux and hardcoded, this is an rough
+>only tested on Linux and hardcoded, this is an early stages of the product
 
 ## inputs: 
 - audio file .m4a
@@ -12,6 +12,9 @@
 - video file
 
 maps audio timestamps to images to create a video that is combined for an output
+
+>**Note**
+>for this early version use images, json and audio provided in repository, next version will allow more free reign
 
 ## how to run
 ```
