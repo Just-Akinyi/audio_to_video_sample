@@ -1,0 +1,9 @@
+{
+    "number_of_speakers": 2,
+    "diarization": {
+        "0": ["speaker_1", "00:00-00:03"],
+        "1": ["speaker_2", "00:04-00:08"],
+        "2": ["silence", "00:09-00:12"]
+
+    }
+}
