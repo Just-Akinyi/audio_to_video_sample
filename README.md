@@ -1,4 +1,4 @@
-# audio_to_video_sample
+# Audio_to_video_sample
 
 >**Note**
 >only tested on Linux and hardcoded, this is early stages of the product
