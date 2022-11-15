@@ -4,7 +4,8 @@
 >only tested on Linux and hardcoded, this is early stages of the product
 
 ## inputs: 
-- audio file .m4a
+- audio file
+   - allowed format : **.m4a**
 - json file containing
    - time stamps for when speakers talk
 
@@ -14,7 +15,7 @@
 maps audio timestamps to images to create a video that is combined for an output
 
 >**Note**
->for this early version use images, json and audio provided in repository, next version will allow more free reign
+>for this early version use images, json and audio provided in repository, next version will allow more flexibility 
 
 ## how to run
 ```
