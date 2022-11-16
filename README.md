@@ -25,3 +25,8 @@ pip install -r requirements.txt
 python main.py audio_path timestamp_json
 ```
 
+## default test paths
+```
+python main.py data/Audio/Recording.m4a timestamp.json
+```
+- 25 seconds average runtime for a 10 seconds long video
