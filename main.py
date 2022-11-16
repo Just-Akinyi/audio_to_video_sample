@@ -7,6 +7,7 @@ from controllers.pool_video import pool
 from uuid import uuid4
 from moviepy.editor import VideoFileClip, AudioFileClip
 from sys import argv
+import os
 # @click.group()
 # def cli():
 #     pass
@@ -48,6 +49,7 @@ def animate(audio_path: str, time_stamp_path :str) -> None:
     audioclip = AudioFileClip(audio_path)
     video = videoclip.set_audio(audioclip)
     video.write_videofile(output_path)
+    os.remove(compiled_video_path)
     print(f'YOUR VIDEO HAS BEEN SAVED TO: [{output_path}]')
 
         

@@ -19,4 +19,6 @@ def pool(video_paths: list, out_path):
     final_video= concatenate_videoclips(videos, method='compose')
     
     final_video.write_videofile(out_path)
+    for file in video_paths:
+        os.remove(file)
     return out_path

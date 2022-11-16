@@ -3,7 +3,7 @@ import cv2 as cv
 import numpy as np
 
 
-FONT = ImageFont.truetype('data/Fonts/arial.ttf', 100)
+FONT = ImageFont.truetype('data/Fonts/arial.ttf', 30)
 
 
 def draw_text(img: Image, text: str, coordinate: tuple[int]) -> Image:
