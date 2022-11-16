@@ -1,27 +1,23 @@
-import ffmpeg
 import json
-import time
-from uuid import uuid4
-# from ffmpeg import stream
 
-""" split_wav `audio file` `time listing`
-    `audio file` is any file known by local FFmpeg
-    `time listing` is a file containing multiple lines of format:
-        `start time` `end time` output name 
-    times can be either MM:SS or S*
-"""
+class Speaker:
 
-
-class AudioSplit:
-
-    def __init__(self, speaker, start, end, index) -> None:
+    def __init__(self, speaker, start, end, index, transcription) -> None:
         self.speaker  = speaker
         self.start = start
         self.end = end
         self.index = index
-        self._stream =None
-        self.transcription = None
+        self.transcription = transcription
         self.video = None
+        self.is_active = False
+
+
+    @property
+    def coordinate(self):
+        if self.speaker == 'speaker_1':
+            return(150, 50)   
+        elif self.speaker == 'speaker_2':
+            return(150, 300)
 
     @property
     def start_seconds(self):
@@ -65,47 +61,48 @@ def make_time(elem: str):
         return float(t[0])
 
 
-def collect_from_file(time_stamp_path) -> list[AudioSplit]:
+def collect_from_file(time_stamp_path) -> list[Speaker]:
     """user can save times in a file, with start and end time on a line"""
-    time_pairs = []
+    video_map = []
     with open(time_stamp_path) as in_times:
         times_db = json.load(in_times)
-        # number_speakers = times_db["number_of_speakers"]
+        avatars = times_db["avatar_paths"]
         diarize_parser = times_db["diarization"]
         for _id in diarize_parser:
             start, end = diarize_parser[_id][1].split('-')
-            time_pairs.append(
-                AudioSplit(
+            video_map.append(
+                Speaker(
                     diarize_parser[_id][0], 
                     start=start, end=end, 
-                    index=_id
+                    index=_id,
+                    transcription = diarize_parser[_id][2]
                 )
             )
-    return time_pairs
+    return video_map, avatars
 
 
-def segment_audiofile(audio_path, time_stamp_path):
+# def segment_audiofile(audio_path, time_stamp_path):
     
-    _in_file = audio_path
-    audios = []
-    for audio_split in collect_from_file(time_stamp_path):
-        # open a file, from `ss`, for duration `t`
-        stream = ffmpeg.input(_in_file, ss=audio_split.start_seconds, t=audio_split.duration)
-        path = f'data/temp_data/{uuid4()}.wav'
-        try:
-            stream = ffmpeg.output(stream, path, format='wav')
-            audio_split._stream = path
-            audios.append(audio_split)
+#     _in_file = audio_path
+#     audios = []
+#     for audio_split in collect_from_file(time_stamp_path):
+#         # open a file, from `ss`, for duration `t`
+#         stream = ffmpeg.input(_in_file, ss=audio_split.start_seconds, t=audio_split.duration)
+#         path = f'data/temp_data/{uuid4()}.wav'
+#         try:
+#             stream = ffmpeg.output(stream, path, format='wav')
+#             audio_split._stream = path
+#             audios.append(audio_split)
             
-            ffmpeg.run(stream)
+#             ffmpeg.run(stream)
            
-        except ffmpeg.Error as e:
-            print("output")
-            print(e.stdout)
-            print("err")
-            print(e.stderr)
+#         except ffmpeg.Error as e:
+#             print("output")
+#             print(e.stdout)
+#             print("err")
+#             print(e.stderr)
 
-    return audios
+#     return audios
 
 
 
