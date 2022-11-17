@@ -18,7 +18,7 @@ def generate_speech_sequence(img_path: Path) -> list[Path]:
     return sorted(dir_files, key= lambda x: x.split('_')[1])
 
 def load_default_state(img_path: Path) -> list[Path]:
-    return [img_path / "default.bmp" for _ in range(FRAMES)]
+    return [img_path / "default.png" for _ in range(FRAMES)]
 
 
 animation_functions = {
@@ -36,14 +36,14 @@ def generate_animation(data: list[Speaker], bg_path: Path, num_speakers: int) ->
         anm_seq = [animation_functions[state](avatar_path) for state in speaker.sequence]
         img_paths.append(list(itertools.chain.from_iterable(anm_seq)))
         
-
+    
     if num_speakers == 2:
         for img_1, img_2 in zip(*img_paths):
             temp_images = [img_1, img_2]
             images.append(
                 generate_image(temp_images, bg_path)
             )
-
+   
     frame_one = images[0]
     height, width, _ = frame_one.shape
     fourcc = cv2.VideoWriter_fourcc(*'mp4v') # Be sure to use lower case
