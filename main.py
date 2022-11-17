@@ -1,36 +1,28 @@
-# from collections import deque
-import time
-from controllers.serializer import load_data
-from controllers.animator import generate_animation
-from controllers.pool_video import pool
+""" Audio animator main script,
+This project serves as a schema for the hng9
+TEAM CLUTCH podcast animator projects
+this script contains the program workflow
+"""
 
-from moviepy.editor import VideoFileClip, AudioFileClip
-import os
+## DATA IMPORTS
 from sys import argv
 from pathlib import Path
 from uuid import uuid4
+import time
+from controllers.serializer import load_data
+from controllers.animator import generate_animation
+from moviepy.editor import VideoFileClip, AudioFileClip
 
 
 
-
-
-
-
-
+## APPLICATION ROOT DIRECTOR
 ROOT_DIR = Path(__file__).parent.resolve()
 DATA_DIR = Path(ROOT_DIR) / "data"
-# @click.group()
-# def cli():
-#     pass
 
 
-# @click.command()
-# @click.argument('-M', '--metadata_json', description='path to metadata json format')
-# @click.argument('-A', '--audio_path', description='path to audio file')
-# @click.argument('-O', '--output_path', description='path to video output')
-# def animate(metadata_json: str, audio_path: str, output_path: str) -> None:
+
 def animate( metadata_path :str) -> None:
-    """_summary_
+    """
 
     Args:
         metadata_json (str): _description_
@@ -44,7 +36,9 @@ def animate( metadata_path :str) -> None:
     animation_path = generate_animation(animation_data, video_obj.bg_path, audio_obj.num_speakers)
     videoclip = VideoFileClip(str(animation_path))
     audioclip = AudioFileClip(str(audio_obj.path))
+    print("About to set audio clip")
     video = videoclip.set_audio(audioclip)
+    print("Audio clip set")
     video.write_videofile(output_path)
     print(f'YOUR VIDEO HAS BEEN SAVED TO: [{output_path}]')
     
