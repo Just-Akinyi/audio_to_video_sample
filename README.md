@@ -3,9 +3,7 @@
 >**Note**
 >only tested on Linux and hardcoded, this is early stages of the product
 
-## inputs: 
-- audio file
-   - allowed format : **.m4a**
+## inputs:
 - json file
    - containing : **time stamps for when speakers talk**
 
@@ -22,11 +20,11 @@ maps audio timestamps to images to create a video that is combined for an output
 python -m venv venv
 pip install -U pip
 pip install -r requirements.txt
-python main.py audio_path timestamp_json
+python main.py timestamp_json
 ```
 
 ## default test paths
 ```
-python main.py data/Audio/Recording.m4a timestamp.json
+python main.py timestamp.json
 ```
 - 25 seconds average runtime for a 10 seconds long video
