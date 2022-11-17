@@ -4,6 +4,8 @@ from pathlib import Path
 from uuid import uuid4
 from .image_generator import generate_image
 from .speaker import Speaker
+import itertools
+
 
 FRAMES = 24
 
@@ -12,9 +14,8 @@ FRAMES = 24
 #     return cv2.imread(f'data/Image/{speaker}.jpg')
 
 def generate_speech_sequence(img_path: Path) -> list[Path]:
-    print(img_path / "animation")
     dir_files = [str(file.path) for file in os.scandir(img_path / "animation")]
-    sorted(dir_files, key= lambda x: x.split('_')[1])
+    return sorted(dir_files, key= lambda x: x.split('_')[1])
 
 def load_default_state(img_path: Path) -> list[Path]:
     return [img_path / "default.bmp" for _ in range(FRAMES)]
@@ -27,15 +28,17 @@ animation_functions = {
 
 def generate_animation(data: list[Speaker], bg_path: Path, num_speakers: int) -> Path:
     images = []
-    img_paths = {}
+    img_paths = []
     output = f'data/compiled_videos/{str(uuid4())}.mp4'
 
     for speaker in data:
         avatar_path = speaker.dir_path
-        img_paths[speaker] = [animation_functions[state](avatar_path) for state in speaker.sequence]
+        anm_seq = [animation_functions[state](avatar_path) for state in speaker.sequence]
+        img_paths.append(list(itertools.chain.from_iterable(anm_seq)))
+        
 
     if num_speakers == 2:
-        for img_1, img_2 in zip(**img_paths):
+        for img_1, img_2 in zip(*img_paths):
             temp_images = [img_1, img_2]
             images.append(
                 generate_image(temp_images, bg_path)

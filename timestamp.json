@@ -22,6 +22,6 @@
     
     "output": {
         "format": "mp4",
-        "background_id": 1
+        "background_id": "01"
     }
 }

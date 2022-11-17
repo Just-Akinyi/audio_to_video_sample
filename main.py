@@ -41,12 +41,9 @@ def animate( metadata_path :str) -> None:
 
 
     audio_obj, video_obj, animation_data = load_data(metadata_path, data_dir=DATA_DIR)
-    for dt in animation_data:
-        print(dt)
-
     animation_path = generate_animation(animation_data, video_obj.bg_path, audio_obj.num_speakers)
-    videoclip = VideoFileClip(animation_path)
-    audioclip = AudioFileClip(audio_obj.path)
+    videoclip = VideoFileClip(str(animation_path))
+    audioclip = AudioFileClip(str(audio_obj.path))
     video = videoclip.set_audio(audioclip)
     video.write_videofile(output_path)
     print(f'YOUR VIDEO HAS BEEN SAVED TO: [{output_path}]')
