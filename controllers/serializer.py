@@ -1,108 +1,73 @@
 import json
-
-class Speaker:
-
-    def __init__(self, speaker, start, end, index, transcription) -> None:
-        self.speaker  = speaker
-        self.start = start
-        self.end = end
-        self.index = index
-        self.transcription = transcription
-        self.video = None
-        self.is_active = False
-
-
-    @property
-    def coordinate(self):
-        if self.speaker == 'speaker_1':
-            return(150, 50)   
-        elif self.speaker == 'speaker_2':
-            return(150, 300)
-
-    @property
-    def start_seconds(self):
-        minute, sec = map(int, self.start.split(':'))
-        total_time = (minute * 60) + sec
-        return total_time
-
-
-    @property
-    def duration(self):
-        minute, sec = map(int, self.end.split(':'))
-        total_time = (minute * 60) + sec
-        duration = total_time - self.start_seconds
-        return duration
-
-    @property
-    def stream(self):
-        return self._stream
-
-    @stream.setter
-    def stream(self, input_audio):
-        self._stream = input_audio
-
-    def __repr__(self) -> str:
-        return f"""SPEAKER: <{self.speaker}>, 
-        START: <{self.start_seconds}>, 
-        DURATION: <{self.duration}>, 
-        STREAM: <{self.stream}>, 
-        TRANSCRIPTION: <{self.transcription}>
-        VIDEO: <{self.video}>"""
+from pathlib import Path
+from .speaker import Speaker
+from .audio import Audio
+from .video import Video
 
 
 
-def make_time(elem: str):
-    # allow user to enter times on CLI
-    t = elem.split('-')
-    try:
-        # will fail if no ':' in time, otherwise add together for total seconds
-        return int(t[0]) * 60 + float(t[1])
-    except IndexError:
-        return float(t[0])
+def parse_timestamp(timestamp_dict: dict[str, list[str]]) -> None:
+    for speech_frame in timestamp_dict:
+        start, stop = speech_frame.split('-')
+        start_time = extract_time(start)
+        stop_time = extract_time(stop)
+        time_range = [sec for sec in range(start_time, stop_time +1, 1)]
+        timestamp_dict[speech_frame].append(time_range)
 
 
-def collect_from_file(time_stamp_path) -> list[Speaker]:
+def extract_time(time: str):
+    minute, sec = map(int, time.split(':'))
+    total_time = (minute * 60) + sec
+    return total_time
+
+
+
+def load_data(file_path, data_dir: Path):
     """user can save times in a file, with start and end time on a line"""
-    video_map = []
-    with open(time_stamp_path) as in_times:
-        times_db = json.load(in_times)
-        avatars = times_db["avatar_paths"]
-        diarize_parser = times_db["diarization"]
-        for _id in diarize_parser:
-            start, end = diarize_parser[_id][1].split('-')
-            video_map.append(
-                Speaker(
-                    diarize_parser[_id][0], 
-                    start=start, end=end, 
-                    index=_id,
-                    transcription = diarize_parser[_id][2]
-                )
+    animation_data = []
+    with open(file_path) as metadata_file:
+        metadata = json.load(metadata_file)
+        audio_data = metadata["audio"]
+        audio = Audio(
+            format = audio_data["format"],
+            length= audio_data["length"],
+            path = audio_data["path"],
+            num_speakers= audio_data["number_speakers"]
+        )
+        video_data = metadata["output"]
+        video = Video(
+            format=video_data["format"],
+            bg_id = video_data["background_id"],
+            root_dir= data_dir / "Image/backgrounds"
             )
-    return video_map, avatars
+        diarization_data = metadata["diarization"]
+        for speaker in diarization_data:
+            avatar_id = speaker.split('_')[1]
+            speaker_obj = Speaker(
+                avatar_id,
+                root_dir = data_dir / "Image/avatars"
+                )
+            parse_timestamp(diarization_data[speaker])
+            speaker_obj.generate_animation_sequence(diarization_data[speaker], audio.lenght)
+            animation_data.append(speaker_obj)
+
+    return audio, video, animation_data
 
 
-# def segment_audiofile(audio_path, time_stamp_path):
-    
-#     _in_file = audio_path
-#     audios = []
-#     for audio_split in collect_from_file(time_stamp_path):
-#         # open a file, from `ss`, for duration `t`
-#         stream = ffmpeg.input(_in_file, ss=audio_split.start_seconds, t=audio_split.duration)
-#         path = f'data/temp_data/{uuid4()}.wav'
-#         try:
-#             stream = ffmpeg.output(stream, path, format='wav')
-#             audio_split._stream = path
-#             audios.append(audio_split)
-            
-#             ffmpeg.run(stream)
-           
-#         except ffmpeg.Error as e:
-#             print("output")
-#             print(e.stdout)
-#             print("err")
-#             print(e.stderr)
+        
 
-#     return audios
 
+   
+
+
+
+
+
+
+
+
+        
+ 
+        
 
 

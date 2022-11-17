@@ -1,6 +1,6 @@
-eng-to-ipa==0.0.2
-ffmpeg-python==0.2.0
-moviepy==1.0.3
+# eng-to-ipa==0.0.2
+# ffmpeg-python==0.2.0
+# moviepy==1.0.3
 opencv-contrib-python==4.6.0.66
 Pillow==9.1.1
 pydub==0.25.1

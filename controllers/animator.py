@@ -1,0 +1,63 @@
+import cv2
+import os
+from pathlib import Path
+from uuid import uuid4
+from .image_generator import generate_image
+from .speaker import Speaker
+
+FRAMES = 24
+
+
+# def get_image(speaker: str):
+#     return cv2.imread(f'data/Image/{speaker}.jpg')
+
+def generate_speech_sequence(img_path: Path) -> list[Path]:
+    print(img_path / "animation")
+    dir_files = [str(file.path) for file in os.scandir(img_path / "animation")]
+    sorted(dir_files, key= lambda x: x.split('_')[1])
+
+def load_default_state(img_path: Path) -> list[Path]:
+    return [img_path / "default.bmp" for _ in range(FRAMES)]
+
+
+animation_functions = {
+    "speech": generate_speech_sequence,
+    "silence": load_default_state
+}
+
+def generate_animation(data: list[Speaker], bg_path: Path, num_speakers: int) -> Path:
+    images = []
+    img_paths = {}
+    output = f'data/compiled_videos/{str(uuid4())}.mp4'
+
+    for speaker in data:
+        avatar_path = speaker.dir_path
+        img_paths[speaker] = [animation_functions[state](avatar_path) for state in speaker.sequence]
+
+    if num_speakers == 2:
+        for img_1, img_2 in zip(**img_paths):
+            temp_images = [img_1, img_2]
+            images.append(
+                generate_image(temp_images, bg_path)
+            )
+
+    frame_one = images[0]
+    height, width, _ = frame_one.shape
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v') # Be sure to use lower case
+    out = cv2.VideoWriter(output, fourcc, 24.0, (width, height))
+
+    for image in images:
+        out.write(image) # Write out frame to video
+        
+
+        # cv2.imshow('video',frame)
+        if (cv2.waitKey(1) & 0xFF) == ord('q'): # Hit `q` to exit
+            break
+
+    # Release everything if job is finished
+    out.release()
+    cv2.destroyAllWindows()
+    return output
+    
+
+

@@ -1,0 +1,48 @@
+class Speaker:
+
+    def __init__(self, speaker, start, end, index, transcription) -> None:
+        self.speaker  = speaker
+        self.start = start
+        self.end = end
+        self.index = index
+        self.transcription = transcription
+        self.video = None
+        # self.is_active = False
+
+
+    @property
+    def coordinate(self):
+        if self.speaker == 'speaker_1':
+            return(150, 50)   
+        elif self.speaker == 'speaker_2':
+            return(150, 300)
+
+    @property
+    def start_seconds(self):
+        minute, sec = map(int, self.start.split(':'))
+        total_time = (minute * 60) + sec
+        return total_time
+
+
+    @property
+    def duration(self) -> int:
+        minute, sec = map(int, self.end.split(':'))
+        total_time = (minute * 60) + sec
+        duration = total_time - self.start_seconds
+        return duration
+
+    @property
+    def stream(self):
+        return self._stream
+
+    @stream.setter
+    def stream(self, input_audio):
+        self._stream = input_audio
+
+    def __repr__(self) -> str:
+        return f"""SPEAKER: <{self.speaker}>, 
+        START: <{self.start_seconds}>, 
+        DURATION: <{self.duration}>, 
+        STREAM: <{self.stream}>, 
+        TRANSCRIPTION: <{self.transcription}>
+        VIDEO: <{self.video}>"""

@@ -1,12 +1,27 @@
 {
-    "avatar_paths":{
-        "data/Image/Team-Clutch-01.png": "speaker_1",
-        "data/Image/Team-Clutch-02.png": "speaker_2"
-    } ,
+    "audio" : {
+        "path": "data/Audio/Recording.m4a",
+        "length": 12,
+        "format": "m4a",
+        "number_speakers": 2
+    },
     "diarization": {
-        "0": ["speaker_1", "00:00-00:03", "this is a recordinng"],
-        "1": ["speaker_2", "00:04-00:08", "this is another recording and now my"],
-        "2": ["speaker_1", "00:09-00:12", "voices can be hearddddd"]
-
+            "avatar_1": {
+                "00:00-00:03": ["speech"],
+                "00:04-00:05": ["silence"],
+                "00:06-00:10": ["speech"],
+                "00:10-00:12": ["silence"]
+            },
+            "avatar_2": {
+                "00:00-00:01": ["silence"],
+                "00:02-00:05": ["speech"],
+                "00:06-00:09": ["silence"],
+                "00:10-00:12": ["speech"]
+            }
+    },
+    
+    "output": {
+        "format": "mp4",
+        "background_id": 1
     }
 }
