@@ -42,7 +42,7 @@ for speaker in parsed_data:
             result.append("silence")
     flattened_dictionary[speaker] = result
 
-
+## flattened_dictionary can now replace data in line 33 animator.py
 
 ## parsed_data_dictionary sample content
             av_1: [
