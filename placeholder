@@ -1,32 +1,50 @@
 
 """
-{
-    speaker_A: path
-},
-parsed_data = {
-}
+
+## text object
+contains following attributes:
     Text(
-        speaker,
-        start to end list: [0, 1],
-        transcription,
-        index
+        speaker: speaker_name,
+        start to end list: [5, 6, 7 .. 15], # formatted from start to end time
+        transcription: utterance,
+        index: element.index
     )
+
+## append Text objects into audio_texts
 audio_texts = [Text]
+
+## parsed_data: empty dictionary to hold each speaker sequence
+parsed_data = {}
+
+## loop through audio_texts to generate parsed_data
 for txt_obj in audio_texts:
+    ## add speaker to parsed_data if not exist or add value if exists
     if txt_obj.speaker in parsed_data:
         parsed_data[txt_obj.speaker].append(
-            (index, start to end list, text)
+            (text_obj.index, text_obj.start to end list, text_obj.text)
         )
     else:
         parsed_data[txt_obj.speaker] = [
-            (index, start to end list, text)
+            (text_obj.index, text_obj.start to end list, text_obj.text)
         ]
 
-        [[1]([2, 3, 4 ])[]]
-        for i in range((len_video)):
+flattened_dictionary = {}
+
+## extract seconds where speaker has spoken
+for speaker in parsed_data:
+    phrase_map = [speaker_tuple[1] for speaker_tuple in speaker]
+    flattened_list = list(itertools.chain.from_iterable(phrase_map))
+    result = []
+    for i in range(length of video in seconds+1, step=1):
+        if i in flattened_list:
+            result.append("speech")
+        else:
+            result.append("silence")
+    flattened_dictionary[speaker] = result
 
 
 
+## parsed_data_dictionary sample content
             av_1: [
                 (1, [2, 3, 4], "killer man"),
                 (2, [6, 7, 8], "killer man"),
@@ -37,4 +55,8 @@ for txt_obj in audio_texts:
                 ()
             ]
 
+
+## flattened_dictionary sample content
+    av_1: ["speech", "speech", "silence"]
+    av_2: ["silence", "speech", "silence"]
 """
