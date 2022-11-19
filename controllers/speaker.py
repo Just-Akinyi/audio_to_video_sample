@@ -29,4 +29,5 @@ class Speaker:
         return f"""DIR_PATH: <{self.dir_path}>,
                    SEQUENCE: <{self.sequence}>
         """
+
         
